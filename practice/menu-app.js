@@ -99,7 +99,7 @@ app.post("/api/orders", async (req, res) => {
     );
 
   // ข้อมูลผิดรูปแบบให้ตอบ 400 ก่อนขอ connection จากฐานข้อมูล
-  // แนวคิด validation: docs/wk05-lab.md ขั้นตอน 2.5; schema ขั้นสูงอยู่ใน docs/wk12.md
+  // ตรวจ input ด้วยเงื่อนไขพื้นฐาน; ดู schema validation เพิ่มเติมใน docs/wk12.md หัวข้อ 2.1
   if (!validCustomerName || !validItems) {
     return res.status(400).json({ error: "ข้อมูลคำสั่งซื้อไม่ถูกต้อง" });
   }
@@ -156,76 +156,6 @@ app.post("/api/orders", async (req, res) => {
     if (connection) {
       connection.release();
     }
-  }
-});
-app.get("/api/orders/:id", async (req, res) => {
-  // path parameter จาก URL เป็น string จึงแปลงเป็น number ก่อนใช้
-  const idText = req.params.id;
-  const id = Number(idText);
-
-  // Validation: รับเฉพาะเลขฐานสิบจำนวนเต็มบวกที่ปลอดภัยก่อนนำไป query
-  // หลักการตรวจ input เชื่อมกับ docs/wk12.md; ใช้รูปแบบตรวจ id ซ้ำกับ route เมนูด้านบน
-  if (!/^[1-9]\d*$/.test(idText) || !Number.isSafeInteger(id)) {
-    return res.status(400).json({ error: "id ต้องเป็นเลขจำนวนเต็มบวก" });
-  }
-
-  try {
-    // JOIN รวมข้อมูลออเดอร์กับรายการอาหารและเมนูใน query เดียว
-    // อ้างอิงแนวคิด JOIN: docs/wk05.md หัวข้อ 3.5
-    // LEFT JOIN ยังให้พบออเดอร์ แม้ออเดอร์นั้นไม่มีรายการอาหาร
-    const [rows] = await pool.query(
-      `c
-        o.id AS orderId,
-        o.customer_name AS customerName,
-        o.status,
-        o.created_at AS createdAt,
-        oi.menu_item_id AS menuItemId,
-        mi.name AS itemName,
-        mi.price,
-        oi.quantity
-      FROM orders AS o
-      LEFT JOIN order_items AS oi ON oi.order_id = o.id
-      LEFT JOIN menu_items AS mi ON mi.id = oi.menu_item_id
-      WHERE o.id = ?`,
-      // Parameterized Query ป้องกันการนำ id ไปต่อใน SQL โดยตรง
-      // อ้างอิง: docs/wk05.md หัวข้อ 3.6
-      [id],
-    );
-
-    // ไม่พบแถวหมายถึงไม่มีออเดอร์ id นี้ จึงตอบ 404
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "ไม่พบออเดอร์" });
-    }
-
-    // JOIN คืนหนึ่งแถวต่อรายการอาหาร ทำให้ข้อมูลออเดอร์ซ้ำกัน
-    // จึงหยิบข้อมูลส่วนออเดอร์จากแถวแรก
-    const first = rows[0];
-
-    // แปลงแถวผลลัพธ์แบบแบนจาก JOIN ให้เป็น array ของรายการอาหารใน JSON
-    // filter แถวที่ไม่มีเมนู ซึ่งเกิดได้เมื่อ LEFT JOIN ไม่พบ order_items
-    const items = rows
-      .filter((row) => row.menuItemId !== null)
-      .map((row) => ({
-        menuItemId: row.menuItemId,
-        name: row.itemName,
-        price: row.price,
-        quantity: row.quantity,
-      }));
-
-    // ส่ง response 200 ตามรูปแบบ API: ข้อมูลออเดอร์หนึ่งรายการพร้อม items
-    return res.status(200).json({
-      order: {
-        id: first.orderId,
-        customerName: first.customerName,
-        status: first.status,
-        createdAt: first.createdAt,
-        items,
-      },
-    });
-  } catch (error) {
-    // จัดการ database error และตอบ 500 แทนการปล่อย error หลุดจาก route
-    console.error(error);
-    return res.status(500).json({ error: "ไม่สามารถดึงข้อมูลออเดอร์ได้" });
   }
 });
 

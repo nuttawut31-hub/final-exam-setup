@@ -2,6 +2,10 @@
 
 > **หมายเหตุ:** รายการด้านล่างเป็นโจทย์จำลองที่คาดจากแนวข้อสอบ เอกสาร และ schema ของโปรเจกต์ ไม่ใช่โจทย์จริงที่อาจารย์ยืนยัน
 
+อ่านตัวอย่างโค้ดที่มีคอมเมนต์และแผนที่เปิดเอกสารประกอบได้ใน [คู่มือโค้ดฝึกข้อสอบปฏิบัติ](PRACTICAL-CODE-GUIDE.md)
+
+เอกสารรายวิชา `docs/` อยู่ใน workspace แยกจาก repository นี้; บน GitHub เปิดดูได้ทั้งคู่มือและไฟล์โค้ดใน `final-exam-setup`
+
 ## ข้อมูลที่ยืนยันจากแนวข้อสอบ
 
 - ภาคปฏิบัติมี 3 ข้อ รวม 15 คะแนน ใช้ Express + MySQL + Jest
@@ -16,25 +20,25 @@
 
 **โจทย์ฝึก:** เพิ่ม `POST /api/orders` รับชื่อลูกค้าและรายการเมนู ตรวจข้อมูลและตรวจว่าเมนูพร้อมขาย บันทึกข้อมูลลง `orders` และ `order_items` ให้สำเร็จพร้อมกัน หากขั้นตอนใดล้มเหลวให้ rollback
 
-**เหตุผลที่คาด:** `seed.sql` มีตาราง `orders` และ `order_items`; [wk05.md](../docs/wk05.md) และ [wk05-lab.md](../docs/wk05-lab.md) สอน MySQL, parameterized query, transaction และ rollback
+**เหตุผลที่คาด:** `seed.sql` มีตาราง `orders` และ `order_items`; เอกสาร `docs/wk05.md` และ `docs/wk05-lab.md` สอน MySQL, parameterized query, transaction และ rollback
 
 ### 2. อ่านรายละเอียดออเดอร์ด้วย JOIN — ความเป็นไปได้สูง
 
 **โจทย์ฝึก:** เพิ่ม `GET /api/orders/:id` เพื่อดึงข้อมูลออเดอร์พร้อมชื่อเมนู ราคา และจำนวน โดยเชื่อม `orders`, `order_items` และ `menu_items`; ตรวจ `id`, ใช้ parameterized query และจัดการกรณีไม่พบออเดอร์
 
-**เหตุผลที่คาด:** ความสัมพันธ์ของตารางอยู่ใน `seed.sql`; [wk05.md หัวข้อ JOIN](../docs/wk05.md) สอนการอ่านข้อมูลจากหลายตาราง และมี route ที่ตอบ `404` เมื่อไม่พบข้อมูล
+**เหตุผลที่คาด:** ความสัมพันธ์ของตารางอยู่ใน `seed.sql`; เอกสาร `docs/wk05.md` หัวข้อ 3.5 สอนการอ่านข้อมูลจากหลายตาราง และมี route ที่ตอบ `404` เมื่อไม่พบข้อมูล
 
 ### 3. เขียน Jest/Supertest tests สำหรับ API — ความเป็นไปได้สูง
 
 **โจทย์ฝึก:** เขียน tests ให้ route ที่โจทย์กำหนด ครอบคลุมกรณีสำเร็จ, input ไม่ถูกต้อง, ไม่พบข้อมูล และ database error; หาก route ใช้ transaction ให้ตรวจ `commit`, `rollback` และการคืน connection ด้วย
 
-**เหตุผลที่คาด:** แนวข้อสอบระบุ Jest ใน stack ภาคปฏิบัติ; [wk09.md](../docs/wk09.md) และ [wk09-lab.md](../docs/wk09-lab.md) สอน Jest, Supertest และ mocking
+**เหตุผลที่คาด:** แนวข้อสอบระบุ Jest ใน stack ภาคปฏิบัติ; เอกสาร `docs/wk09.md` และ `docs/wk09-lab.md` สอน Jest, Supertest และ mocking
 
 ## หัวข้อสำรองที่อาจถูกนำไปประกอบโจทย์
 
-- **Authentication/JWT/RBAC:** เพิ่มการป้องกัน route หรือจำกัดสิทธิ์ตามบทบาท — [wk06](../docs/wk06.md)
-- **Filtering/Pagination/Versioning:** ปรับ endpoint เมนูให้ค้นหา กรอง หรือแบ่งหน้า — [wk07](../docs/wk07.md)
-- **Input validation/Rate limiting:** ตรวจ request เพิ่มเติมหรือจำกัดการเรียก endpoint — [wk12](../docs/wk12.md)
+- **Authentication/JWT/RBAC:** เพิ่มการป้องกัน route หรือจำกัดสิทธิ์ตามบทบาท — `docs/wk06.md`
+- **Filtering/Pagination/Versioning:** ปรับ endpoint เมนูให้ค้นหา กรอง หรือแบ่งหน้า — `docs/wk07.md`
+- **Input validation/Rate limiting:** ตรวจ request เพิ่มเติมหรือจำกัดการเรียก endpoint — `docs/wk12.md`
 
 ## วิธีใช้รายการนี้
 

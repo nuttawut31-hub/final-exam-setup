@@ -21,7 +21,7 @@ CREATE TABLE orders (
 CREATE TABLE order_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
-  menu_items INT NOT NULL,
+  menu_item_id INT NOT NULL,
   quantity INT NOT NULL,
   CONSTRAINT fk_oi_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
   CONSTRAINT fk_oi_menu FOREIGN KEY (menu_item_id) REFERENCES menu_items(id)
