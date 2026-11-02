@@ -1,0 +1,23 @@
+{
+  "name": "final-exam-setup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ชุดติดตั้งสภาพแวดล้อมสำหรับข้อสอบปลายภาค 88736065",
+  "scripts": {
+    "seed": "node scripts/seed.js",
+    "check": "node scripts/check-env.js",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
